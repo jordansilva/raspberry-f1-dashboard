@@ -1,0 +1,3 @@
+{
+    "files": ["project.pro","main.qml","libs/LedWidget.py","images/lightning-outline-filled.png","main.py","libs/__init__.py"]
+}
