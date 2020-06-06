@@ -1,18 +1,19 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick 2.9
+import QtQuick.Window 2.9
 import QtQuick.Layouts 1.11
-import QtQuick3D 1.15
-import QtQuick.Controls 1.4 as QQC1
-import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls 2.2
+import QtQuick.Extras 1.4
 
-QQC2.ApplicationWindow {
+ApplicationWindow {
     id: window
     title: qsTr("Hello World")
     width: 800
     height: 480
     color: "#000000"
     visible: true
+    Component.onCompleted: {
+//        window.showFullScreen()
+    }
 
     Rectangle {
         id: rectangle1
@@ -50,7 +51,7 @@ QQC2.ApplicationWindow {
             font.bold: true
             font.pixelSize: 250
 
-            QQC2.Label {
+            Label {
                 id: txtCarBehind1
                 objectName: "txtDiffPreviousLap"
                 x: 2
@@ -67,7 +68,7 @@ QQC2.ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment: Text.AlignHCenter
                 anchors.rightMargin: 10
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
         }
@@ -84,27 +85,26 @@ QQC2.ApplicationWindow {
             border.width: 2
             border.color: "gray"
 
-            QQC2.Label {
-                id: txtSpeed
-                objectName: "txtSpeed"
-                x: 0
-                y: 0
+            Rectangle {
                 width: 250
                 height: 48
-                color: "#ffffff"
-                text: car.speed + " KPM"
-                font.styleName: "Bold"
-                verticalAlignment: Text.AlignVCenter
-                fontSizeMode: Text.HorizontalFit
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.pixelSize: 36
-                background: Rectangle {
-                    color: "gray"
+                color: "#808080"
+                Label {
+                    id: txtSpeed
+                    objectName: "txtSpeed"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    color: "#ffffff"
+                    text: car.speed + " KPM"
+                    fontSizeMode: Text.HorizontalFit
+                    font.pixelSize: 36
+                    font.styleName: "Bold"
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
 
-            QQC2.Label {
+            Label {
                 id: txtLap
                 objectName: "txtLap"
                 y: 57
@@ -114,12 +114,12 @@ QQC2.ApplicationWindow {
                 text: "L" + lap.currentLapNum
                 anchors.left: parent.left
                 anchors.leftMargin: 10
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
 
 
-            QQC2.Label {
+            Label {
                 id: txtPosition
                 objectName: "txtPosition"
                 x: 176
@@ -131,11 +131,11 @@ QQC2.ApplicationWindow {
                 horizontalAlignment: Text.AlignRight
                 anchors.right: parent.right
                 anchors.rightMargin: 10
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
 
-            QQC2.Label {
+            Label {
                 id: txtCarAhead
                 objectName: "txtCarAhead"
                 x: 8
@@ -145,20 +145,21 @@ QQC2.ApplicationWindow {
                 color: "#ffffff"
                 text: qsTr("3.4")
                 anchors.leftMargin: 10
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
 
-            QQC2.Label {
+            Label {
                 id: txtCarBehind
                 objectName: "txtCarBehind"
                 x: 96
                 y: 99
                 color: "#28f054"
-                text: qsTr("(+300.34)")
+                text: carStatus.fuelRemainingLaps
+                anchors.right: parent.right
                 anchors.rightMargin: 10
                 horizontalAlignment: Text.AlignRight
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
         }
@@ -173,55 +174,54 @@ QQC2.ApplicationWindow {
             anchors.right: parent.right
             anchors.rightMargin: 20
             border.width: 2
-            QQC2.Label {
-                id: txtLapTime
-                objectName: "txtLapTime"
-                x: 0
-                y: 0
+
+            Rectangle {
                 width: 250
                 height: 48
-                color: "#ffffff"
-                text: lap.currentLapTime
-                background: Rectangle {
-                    color: "#808080"
+                color: "#808080"
+                Label {
+                    id: txtLapTime
+                    objectName: "txtLapTime"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    color: "#ffffff"
+                    text: lap.currentLapTime
+                    fontSizeMode: Text.HorizontalFit
+                    font.pixelSize: 36
+                    font.styleName: "Bold"
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                fontSizeMode: Text.HorizontalFit
-                font.pixelSize: 36
-                font.styleName: "Bold"
-                font.bold: true
             }
-
-            QQC2.Label {
+            Label {
                 id: txtTireLeft1
                 objectName: "txtTireLeft1"
                 y: 57
                 width: 97
                 height: 36
                 color: "#ffffff"
-                text: car.tyresSurfaceTemperature[0] + "°C"
+                text: car.tyresInnerTemperature[2] + "°C"
                 anchors.left: parent.left
                 anchors.leftMargin: 10
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
 
-            QQC2.Label {
+            Label {
                 id: txtTireLeft2
                 objectName: "txtTireLeft2"
                 y: 99
                 width: 97
                 height: 36
                 color: "#ffffff"
-                text: car.tyresSurfaceTemperature[1] + "°C"
+                text: car.tyresInnerTemperature[0] + "°C"
                 anchors.left: parent.left
                 anchors.leftMargin: 10
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
 
-            QQC2.Label {
+            Label {
                 id: txtTireRight1
                 objectName: "txtTireRight1"
                 x: 145
@@ -229,15 +229,15 @@ QQC2.ApplicationWindow {
                 width: 97
                 height: 36
                 color: "#ffffff"
-                text: car.tyresSurfaceTemperature[2] + "°C"
+                text: car.tyresInnerTemperature[3] + "°C"
                 horizontalAlignment: Text.AlignRight
                 anchors.rightMargin: 10
                 anchors.right: parent.right
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
 
-            QQC2.Label {
+            Label {
                 id: txtTireRight2
                 objectName: "txtTireRight2"
                 x: 143
@@ -245,41 +245,49 @@ QQC2.ApplicationWindow {
                 width: 97
                 height: 36
                 color: "#ffffff"
-                text: car.tyresSurfaceTemperature[3] + "°C"
+                text: car.tyresInnerTemperature[1] + "°C"
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 horizontalAlignment: Text.AlignRight
-                font.pointSize: 30
+                font.pixelSize: 30
                 font.bold: true
             }
             border.color: "#808080"
         }
 
-        QQC1.ProgressBar {
-            id: txtEnergyERS
-            objectName: "txtEnergyERS"
+        Rectangle {
+            property int percentage: carStatus.ersStoreEnergy
+            id: progressEnergyERS
             width: 600
             height: 30
+            radius: height / 2
+            color: "transparent"
+            border.color: "yellow"
+            border.width: 1
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 100
-            value: carStatus.ersStoreEnergyPercentage
-            minimumValue: 0
-            maximumValue: 100
 
-            style: ProgressBarStyle {
-                background: Rectangle {
-                    color: "black"
-                    border.color: "yellow"
-                    border.width: 1
-                }
-                progress: Rectangle {
+            Item {
+                id: progressEnergyERSItem
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                anchors.left: parent.left
+                width: parent.width * parent.percentage / 100
+                clip: true
+
+                Rectangle {
+                    width: progressEnergyERS.width
+                    height: progressEnergyERS.height
+                    radius: height / 2
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
                     color: "yellow"
-                    border.color: "yellow"
                 }
             }
 
-            QQC2.Label {
+
+            Label {
                 id: txtLevelERS
                 objectName: "txtLevelERS"
                 x: -29
@@ -295,7 +303,7 @@ QQC2.ApplicationWindow {
                 font.capitalization: Font.AllUppercase
                 horizontalAlignment: Text.AlignRight
                 font.family: "Arial"
-                font.pointSize: 28
+                font.pixelSize: 28
                 font.weight: Font.DemiBold
                 font.bold: true
 
@@ -314,7 +322,8 @@ QQC2.ApplicationWindow {
                     source: "images/lightning-outline-filled.png"
                 }
             }
-            QQC2.Label {
+
+            Label {
                 id: txtPercentageERS
                 objectName: "txtPercentageERS"
                 y: 0
@@ -330,32 +339,46 @@ QQC2.ApplicationWindow {
                 horizontalAlignment: Text.AlignLeft
                 font.family: "Arial"
                 anchors.rightMargin: 10
-                font.pointSize: 28
+                font.pixelSize: 28
                 font.weight: Font.DemiBold
                 font.bold: true
             }
         }
 
         //D Progress
-        QQC1.ProgressBar {
-            id: txtProgressD
-            objectName: "txtProgressD"
+        Rectangle {
+            property int percentage: carStatus.ersDeployedThisLap
+            id: progressD
             width: 250
             height: 30
+            radius: height / 2
+            color: "transparent"
+            border.color: "#ffffff"
+            border.width: 1
             anchors.left: parent.left
             anchors.leftMargin: 100
-            style: ProgressBarStyle {
-                background: Rectangle {
-                    color: "black"
-                    border.color: "white"
-                    border.width: 1
-                }
-                progress: Rectangle {
-                    color: "white"
-                    border.color: "white"
+            anchors.bottomMargin: 40
+            anchors.bottom: parent.bottom
+
+            Item {
+                id: txtProgressDRect
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                anchors.left: parent.left
+                width: parent.width * parent.percentage / 100
+                clip: true
+
+                Rectangle {
+                    width: progressD.width
+                    height: progressD.height
+                    radius: height / 2
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    color: "#ffffff"
                 }
             }
-            QQC2.Label {
+
+            Label {
                 id: txtD
                 x: -29
                 y: 0
@@ -371,36 +394,45 @@ QQC2.ApplicationWindow {
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.left
-                font.pointSize: 28
+                font.pixelSize: 28
                 font.weight: Font.DemiBold
                 font.bold: true
             }
-            value: carStatus.ersDeployedThisLap
-            minimumValue: 0
-            maximumValue: 100
-            anchors.bottomMargin: 40
-            anchors.bottom: parent.bottom
         }
 
-        QQC1.ProgressBar {
+        Rectangle {
+            property int percentage: carStatus.ersHarvestedThisLap
             id: progressH
-            objectName: "txtProgressH"
             width: 250
             height: 30
+            radius: height / 2
+            color: "transparent"
+            border.color: "#ffffff"
+            border.width: 1
             anchors.right: parent.right
             anchors.rightMargin: 100
-            style: ProgressBarStyle {
-                background: Rectangle {
-                    color: "black"
-                    border.color: "white"
-                    border.width: 1
-                }
-                progress: Rectangle {
-                    color: "white"
-                    border.color: "white"
+            anchors.bottomMargin: 40
+            anchors.bottom: parent.bottom
+
+            Item {
+                id: cliprect
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                anchors.left: parent.left
+                width: parent.width * parent.percentage / 100
+                clip: true
+
+                Rectangle {
+                    width: progressH.width
+                    height: progressH.height
+                    radius: height / 2
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    color: "#ffffff"
                 }
             }
-            QQC2.Label {
+
+            Label {
                 id: txtH
                 y: 0
                 width: 19
@@ -414,16 +446,11 @@ QQC2.ApplicationWindow {
                 horizontalAlignment: Text.AlignRight
                 font.family: "Arial"
                 anchors.verticalCenter: parent.verticalCenter
-                font.pointSize: 28
+                font.pixelSize: 28
                 font.weight: Font.DemiBold
                 font.bold: true
                 renderType: Text.NativeRendering
             }
-            value: carStatus.ersHarvestedThisLap
-            minimumValue: 0
-            maximumValue: 100
-            anchors.bottomMargin: 40
-            anchors.bottom: parent.bottom
         }
 
         RowLayout {
@@ -433,199 +460,241 @@ QQC2.ApplicationWindow {
             width: 735
             height: 44
             anchors.horizontalCenter: parent.horizontalCenter
-            Image {
-                id: led14
+
+            Rectangle {
+                id: led0
                 x: 707
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_green.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: true
+                    anchors.centerIn: parent
+                    color: "#6FD269"
+                }
             }
 
-            Image {
-                id: led13
+            Rectangle {
+                id: led1
                 x: 442
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_green.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    anchors.centerIn: parent
+                    color: "#6FD269"
+                }
             }
 
-            Image {
-                id: led12
+            Rectangle {
+                id: led2
                 x: 408
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_empty.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    anchors.centerIn: parent
+                    color: "#6FD269"
+                }
             }
 
-            Image {
-                id: led11
+            Rectangle {
+                id: led3
                 x: 374
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_empty.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    anchors.centerIn: parent
+                    color: "#6FD269"
+                }
             }
 
-            Image {
-                id: led10
+            Rectangle {
+                id: led4
                 x: 340
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_empty.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    anchors.centerIn: parent
+                    color: "#6FD269"
+                }
             }
 
-            Image {
-                id: led9
+            Rectangle {
+                id: led5
                 x: 306
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_red.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[5]
+                    anchors.centerIn: parent
+                    color: "#DE0C10"
+                }
             }
 
-            Image {
-                id: led8
+            Rectangle {
+                id: led6
                 x: 272
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_red.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[6]
+                    anchors.centerIn: parent
+                    color: "#DE0C10"
+                }
             }
 
-            Image {
+            Rectangle {
                 id: led7
                 x: 238
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_red.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[7]
+                    anchors.centerIn: parent
+                    color: "#DE0C10"
+                }
             }
 
-            Image {
-                id: led6
+            Rectangle {
+                id: led8
                 x: 204
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_red.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[8]
+                    anchors.centerIn: parent
+                    color: "#DE0C10"
+                }
             }
 
-            Image {
-                id: led5
+            Rectangle {
+                id: led9
                 x: 170
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_red.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[9]
+                    anchors.centerIn: parent
+                    color: "#DE0C10"
+                }
             }
 
-            Image {
-                id: led4
+            Rectangle {
+                id: led10
                 x: 136
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_blue.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[10]
+                    anchors.centerIn: parent
+                    color: "#0F7BD7"
+                }
             }
 
-            Image {
-                id: led3
+            Rectangle {
+                id: led11
                 x: 102
-                y: -4
-                anchors.verticalCenter: parent.verticalCenter
+                y: 0
                 width: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_blue.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                height: 28
+                color: "transparent"
+                anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[11]
+                    anchors.centerIn: parent
+                    color: "#0F7BD7"
+                }
             }
 
-            Image {
-                id: led2
+            Rectangle {
+                id: led12
                 x: 68
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_blue.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[12]
+                    anchors.centerIn: parent
+                    color: "#0F7BD7"
+                }
             }
 
-            Image {
-                id: led1
+            Rectangle {
+                id: led13
                 x: 34
-                y: -4
+                y: 0
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_blue.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[13]
+                    anchors.centerIn: parent
+                    color: "#0F7BD7"
+                }
             }
 
-            Image {
-                id: led0
-                x: 0
-                y: -4
+            Rectangle {
+                id: led14
                 width: 28
                 height: 28
-                fillMode: Image.PreserveAspectFit
-                source: "images/led_blue.png"
-                sourceSize.height: 30
-                sourceSize.width: 30
+                color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
+
+                StatusIndicator {
+                    active: revLights[14]
+                    anchors.centerIn: parent
+                    color: "#0F7BD7"
+                }
             }
+
         }
     }
 
@@ -635,6 +704,6 @@ QQC2.ApplicationWindow {
 
 /*##^##
 Designer {
-    D{i:0;3d-active-scene:-1}
+    D{i:7;anchors_y:57}
 }
 ##^##*/
