@@ -15,11 +15,23 @@ ApplicationWindow {
 //        window.showFullScreen()
     }
 
+
+
     Rectangle {
         id: rectangle1
         width: 800
         height: 480
         color: "#000000"
+
+        FontLoader {
+            id: fontDigital7
+            source: "fonts/digital-7.ttf"
+        }
+
+        FontLoader {
+            id: fontDefault
+            source: "fonts/BebasNeue-Regular.ttf"
+        }
 
         Text {
             id: txtGear
@@ -30,39 +42,26 @@ ApplicationWindow {
             height: 200
             color: "#ffffff"
             text: car.gear
-            font.weight: Font.DemiBold
-            anchors.horizontalCenterOffset: 0
-            font.family: "Arial"
-            visible: true
+            font.family: fontDigital7.name
             anchors.horizontalCenter: parent.horizontalCenter
-            topPadding: 0
-            font.kerning: true
             font.capitalization: Font.AllUppercase
-            enabled: true
-            lineHeight: 1
-            fontSizeMode: Text.FixedSize
-            renderType: Text.QtRendering
-            textFormat: Text.AutoText
-            maximumLineCount: 0
-            verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            clip: false
-            font.preferShaping: false
             font.bold: true
             font.pixelSize: 250
 
             Label {
-                id: txtCarBehind1
+                id: txtDiffPreviousLap
                 objectName: "txtDiffPreviousLap"
                 x: 2
                 width: 150
                 height: 34
                 color: "#28f054"
-                text: qsTr("-100.344")
+                text: lap.diffPreviousLap
+                visible: !carStatus.pitLimiterStatus
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
                 font.weight: Font.DemiBold
-                font.family: "Arial"
+                font.family: fontDefault.name
                 anchors.top: parent.bottom
                 anchors.topMargin: 10
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -70,6 +69,44 @@ ApplicationWindow {
                 anchors.rightMargin: 10
                 font.pixelSize: 30
                 font.bold: true
+            }
+
+            Label {
+                id: txtPitLimiter
+                objectName: "txtPitLimiter"
+                x: 2
+                color: "#ffffff"
+                text: "Pit Limiter"
+                visible: carStatus.pitLimiterStatus
+                verticalAlignment: Text.AlignVCenter
+                font.family: fontDefault.name
+                font.letterSpacing: 2
+                font.wordSpacing: 5
+                anchors.top: parent.bottom
+                anchors.topMargin: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.rightMargin: 10
+                font.pixelSize: 46
+                font.bold: true
+
+                Rectangle {
+                    width: 20
+                    height: 20
+                    color: "#FF3431"
+                    anchors.right: parent.left
+                    anchors.rightMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Rectangle {
+                    width: 20
+                    height: 20
+                    color: "#FF3431"
+                    anchors.left: parent.right
+                    anchors.leftMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                }
             }
         }
 
@@ -302,8 +339,8 @@ ApplicationWindow {
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
                 horizontalAlignment: Text.AlignRight
-                font.family: "Arial"
-                font.pixelSize: 28
+                font.family: fontDefault.name
+                font.pixelSize: 32
                 font.weight: Font.DemiBold
                 font.bold: true
 
@@ -337,9 +374,9 @@ ApplicationWindow {
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
                 horizontalAlignment: Text.AlignLeft
-                font.family: "Arial"
+                font.family: fontDefault.name
                 anchors.rightMargin: 10
-                font.pixelSize: 28
+                font.pixelSize: 32
                 font.weight: Font.DemiBold
                 font.bold: true
             }
@@ -386,15 +423,14 @@ ApplicationWindow {
                 height: 34
                 color: "#ffffff"
                 text: qsTr("D")
-                renderType: Text.NativeRendering
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
                 horizontalAlignment: Text.AlignRight
-                font.family: "Arial"
+                font.family: fontDefault.name
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.left
-                font.pixelSize: 28
+                font.pixelSize: 32
                 font.weight: Font.DemiBold
                 font.bold: true
             }
@@ -443,10 +479,10 @@ ApplicationWindow {
                 anchors.leftMargin: 10
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
-                horizontalAlignment: Text.AlignRight
-                font.family: "Arial"
+                horizontalAlignment: Text.AlignLeft
+                font.family: fontDefault.name
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: 28
+                font.pixelSize: 32
                 font.weight: Font.DemiBold
                 font.bold: true
                 renderType: Text.NativeRendering
@@ -471,7 +507,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
 
                 StatusIndicator {
-                    active: true
+                    active: revLights[0]
                     anchors.centerIn: parent
                     color: "#6FD269"
                 }
@@ -487,6 +523,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
 
                 StatusIndicator {
+                    active: revLights[1]
                     anchors.centerIn: parent
                     color: "#6FD269"
                 }
@@ -502,6 +539,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
 
                 StatusIndicator {
+                    active: revLights[2]
                     anchors.centerIn: parent
                     color: "#6FD269"
                 }
@@ -517,6 +555,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
 
                 StatusIndicator {
+                    active: revLights[3]
                     anchors.centerIn: parent
                     color: "#6FD269"
                 }
@@ -532,6 +571,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
 
                 StatusIndicator {
+                    active: revLights[4]
                     anchors.centerIn: parent
                     color: "#6FD269"
                 }

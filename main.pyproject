@@ -1,3 +1,15 @@
 {
-    "files": ["project.pro","main.qml","libs/LedWidget.py","images/lightning-outline-filled.png","main.py","libs/__init__.py", "data/f1_2laps.p"]
+    "files": [
+    "project.pro",
+    "main.qml",
+    "images/lightning-outline-filled.png",
+    "main.py",
+    "data/f1_2laps.p",
+    "src/driver.py",
+    "src/telemetry.py",
+    "src/f1socket.py",
+    "src/utils/formatHelper.py",
+    "src/utils/enums.py",
+    "src/utils/uiHelper.py"
+    ]
 }
