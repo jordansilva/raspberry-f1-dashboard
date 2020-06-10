@@ -38,6 +38,23 @@ def mapRevLights(percent, drsAllowed = False, drsActive = False):
 
     return lights
 
+
+def deltaPreviousLap(driver):
+    if not driver or not driver.lapData or not driver.miniSectors or driver.lapData.currentLapNum == 1:
+        return float('inf')
+
+    lastLap = driver.lapData.currentLapNum - 1
+    currLap = driver.lapData.currentLapNum
+    currMiniSector = int(driver.lapData.lapDistance / Constants.MINISECTOR_GAP)
+
+    if lastLap not in driver.miniSectors or currMiniSector not in driver.miniSectors[lastLap] or currMiniSector not in driver.miniSectors[currLap]:
+        return float('inf')
+
+    lastTime = driver.miniSectors[lastLap][currMiniSector]
+    currTime = driver.miniSectors[currLap][currMiniSector]
+
+    return (currTime - lastTime) /1000.0
+
 def deltaBetween(driver1, driver2):
     if not driver1 or not driver2 or not driver1.lapData or not driver2.lapData:
         return float('inf')
@@ -51,14 +68,14 @@ def deltaBetween(driver1, driver2):
     if driver1Lap == driver2Lap or (driver1Lap == driver2Lap+1 and driver1Distance < driver2Distance):
         if driver1.miniSectors and driver2.miniSectors:
             # Last one of the seconds, is the slowest
-            idx = int(driver2Distance / Constants.MINISECTOR_GAP)
+            currMiniSector = int(driver2Distance / Constants.MINISECTOR_GAP)
 
             # We get the CURRENT LAP of SECOND, is the last.
-            if not driver1.miniSectors[driver2Lap] or idx not in driver1.miniSectors[driver2Lap]:
+            if not driver1.miniSectors[driver2Lap] or currMiniSector not in driver1.miniSectors[driver2Lap]:
                 return float('inf')            
 
-            driver1Time = driver1.miniSectors[driver2Lap][idx]
-            driver2Time = driver2.miniSectors[driver2Lap][idx]
+            driver1Time = driver1.miniSectors[driver2Lap][currMiniSector]
+            driver2Time = driver2.miniSectors[driver2Lap][currMiniSector]
 
             diff = driver2Time - driver1Time
             return diff / 1000.0

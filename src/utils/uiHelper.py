@@ -1,4 +1,4 @@
-from .formatHelper import formatLapTime, formatFuelRemainingLaps, mapRevLights, mapGear
+from .formatHelper import formatLapTime, formatFuelRemainingLaps, mapRevLights, mapGear, deltaPreviousLap
 
 def mapToLapViewState(driver):
     lap = driver.lapData
@@ -8,10 +8,10 @@ def mapToLapViewState(driver):
     data["currentLapNum"] = lap.currentLapNum
     data["position"] = lap.carPosition
     data["pitStatus"] = lap.pitStatus
-    data["diffPreviousLap"] = 0
+    data["diffPreviousLap"] = deltaPreviousLap(driver)
 
     return data
-    
+
 
 def mapToCarTelemetryViewState(driver):
     carTelemetry = driver.carTelemetry

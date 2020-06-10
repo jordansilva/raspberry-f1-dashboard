@@ -3,8 +3,9 @@ import pickle
 import time
 
 from f1_2019_telemetry.packets import unpack_udp_packet, PacketID, EventStringCode
-from .utils import mapGear, mapRevLights, deltaBetween, formatDelta, mapToLapViewState, mapToCarTelemetryViewState, mapToCarStatusViewState
+from .utils import mapToLapViewState, mapToCarTelemetryViewState, mapToCarStatusViewState, deltaBetween, ResultStatus
 from .driver import Driver
+from termcolor import colored
 
 from PyQt5.QtCore import pyqtSignal, QThread
 
@@ -25,7 +26,6 @@ class F1Socket(QThread):
         self.lastPackets = {}
 
     def initSocket(self):
-        self.resetData()
         udp_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         udp_socket.bind(('', 20777))
 
@@ -39,26 +39,32 @@ class F1Socket(QThread):
         with open("data/f1_5laps.pickle", "rb") as handler:
             data = pickle.load(handler)
 
-        while True:
-            for packet in data:
-                self.processPacket(packet)
-                time.sleep(0.01)
+#        while True:
+        for packet in data:
+            self.processPacket(packet)
+            time.sleep(0.01)
+
+        print(colored("POS   NAME\t\tLAPS\tTOTAL\tSTATUS", 'green'))
+        for pos, i in sorted(self.positions.items(), key=lambda item: item[0]):
+            d = self.drivers[i]
+
+            isMe = self.myCarIndex == i
+            color = 'red' if isMe == i else 'grey'
+            text = "%d   %s\t%d\t%.3f\t%s" % (d.lapData.carPosition,\
+                                              d.participant.name.decode('utf8'),\
+                                              len(d.previousLaps),\
+                                              sum(d.previousLaps.values())/60,\
+                                              ResultStatus(d.lapData.resultStatus).name)
+            print(text)
+
+            if isMe:
+                print(self.carsDelta())
 
         return
 
     def getMyData(self):
         return self.drivers[self.myCarIndex]
 
-    def carAheadDelta(self, driver):
-        driverPosition = driver.lapData.carPosition
-        if driverPosition == 1:
-            return 0
-
-        driverAheadIdx = self.positions[driverPosition - 1]
-        driverAhead = self.drivers[driverAheadIdx]
-        delta = deltaBetween(driverAhead, driver)
-        delta = formatDelta(delta)
-        return delta
 
     def processPacket(self, packet):
         self.lastPackets[packet.header.packetId] = packet
@@ -93,12 +99,12 @@ class F1Socket(QThread):
     # (2019, 1, 3) : PacketEventData_V1
     def updateEvent(self, packet):
         if EventStringCode(packet.eventStringCode) == EventStringCode.SSTA:
-            self.myCarIndex = packet.header.playerCarIndex
             self.drivers = []
-
 
     # (2019, 1, 4) : ParticipantData_V1
     def updateParticipants(self, packet):
+        self.myCarIndex = packet.header.playerCarIndex
+
         if not self.drivers:
             session = self.lastPackets[PacketID.SESSION]
             self.drivers = list(map(lambda p: Driver(p, session), packet.participants))
@@ -116,10 +122,37 @@ class F1Socket(QThread):
     # (2019, 1, 2) : PacketLapData_V1
     def processLapData(self, packet):
         for idx, lap in enumerate(packet.lapData):
-            self.drivers[idx].processLapData(lap)
+            self.drivers[idx].processMiniSectors(lap.currentLapNum, lap.lapDistance)
+
+        for idx, lap in enumerate(packet.lapData):
+            computeSectors = self.drivers[idx].processLapData(lap)
             self.positions[lap.carPosition] = idx
 
+            if idx == self.myCarIndex and computeSectors:
+                print(self.carsDelta())
+
         self.lap.emit(mapToLapViewState(self.getMyData()))
+
+
+    def carsDelta(self):
+        driver = self.getMyData()
+        myPosition = driver.lapData.carPosition
+
+        deltaA = 0
+        deltaB = 0
+        # driver ahead
+        if myPosition > 1:
+            driverAheadIdx = self.positions[myPosition - 1]
+            driverAhead = self.drivers[driverAheadIdx]
+            deltaA = deltaBetween(driverAhead, driver)
+
+        # driver behind
+        if myPosition < len(self.drivers):
+            driverBehindIdx = self.positions[myPosition + 1]
+            driverBehind = self.drivers[driverBehindIdx]
+            deltaB = deltaBetween(driver, driverBehind)
+
+        return [deltaA, deltaB]
 
 
     # (2019, 1, 5) : CarSetupData_V1

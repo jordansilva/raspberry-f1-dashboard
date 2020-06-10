@@ -37,3 +37,12 @@ class TyresCompound(Enum):
     HARD = 20 #C1
     INTER = 7
     WET = 8
+
+class ResultStatus(Enum):
+    INVALID = 0
+    INACTIVE = 1
+    ACTIVE = 2
+    FINISHED = 3
+    DISQUALIFIED = 4
+    NOT_CLASSIFIED = 5
+    RETIRE = 6
