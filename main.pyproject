@@ -10,6 +10,7 @@
     "src/f1socket.py",
     "src/utils/formatHelper.py",
     "src/utils/enums.py",
-    "src/utils/uiHelper.py"
+    "src/utils/uiHelper.py",
+    "src/utils/constants.py"
     ]
 }
